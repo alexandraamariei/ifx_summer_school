@@ -41,6 +41,8 @@ class ifx_dig_test_hello_world extends ifx_dig_testbase;
 
         `TEST_INFO("Main phase started")
 #100us;
+drive_reset(.use_clock_cycle(1), .numb_of_clocks(20));
+#100us;
 
         phase.drop_objection(this);
     endtask
