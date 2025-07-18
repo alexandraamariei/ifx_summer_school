@@ -166,12 +166,18 @@ task model_interrupt();
         fork
             forever @(posedge filt_int_req_b[ifilter_aux]) begin
                 //TODO: Implement logic modeling the interput status and the intrrupt
+                regblock.predict_field_value($sformatf("INT_STATUS%0d", (ifilter_aux+1)%8 ? (ifilter_aux+1)/8+1 : (ifilter_aux+1)/8), $sformatf("IN%0d_INT", ifilter_aux+1), 1); // set the interrupt status in the regblock
+                @(posedge dig_vif.clk_i);
+                filt_int_req_b[ifilter_aux] = 0;
                 `uvm_info("INTERRUPT_REQUEST", $sformatf("Interrupt request for filter ended. %0d", ifilter_aux), UVM_MEDIUM)
             end
         join_none
     end
 
     //HINT: combine all the request into a single interrupt output
+    forever @(filt_int_req_b) begin
+        int_pulse_out_gm = |filt_int_req_b;
+    end
 endtask
 
 
@@ -188,6 +194,10 @@ task model_data_out();
         case(filt_packet.filter_validity)
             FILT_VALID: begin
                 // TODO: Implement logic for modeling the filter output update and interrupt update (if enabled)
+                data_out_gm[filt_packet.id] = filt_packet.filt_edge == FILT_RISE_EDGE ? 1 : 0;
+                if(regblock.get_field_value($sformatf("FILTER_CTRL%0d", filt_packet.id+1), "INT_EN")) begin
+                    filt_int_req_b[filt_packet.id] = 1; // set the interrupt request for the filter
+                end
             end
 
             FILT_NONE: begin

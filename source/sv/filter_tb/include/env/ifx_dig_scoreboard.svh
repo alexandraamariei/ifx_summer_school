@@ -136,7 +136,11 @@ function void ifx_dig_scoreboard::build_phase(uvm_phase phase);
     regblock = ifx_dig_regblock::type_id::create("regblock");
     regblock.build();
 
-    //TODO: Get dig_vif pointer from uvm_config_db
+if (!uvm_config_db#(virtual ifx_dig_interface)::get(this, "", "dig_if", dig_vif))
+        `uvm_fatal("TEST_BASE/NOVIF", "No virtual interface specified for SCOREBOARD")
+
+
+
 
 endfunction : build_phase
 
@@ -153,6 +157,15 @@ endfunction : end_of_elaboration_phase
 task ifx_dig_scoreboard::run_phase(uvm_phase phase);
     // TODO: Write code allowing for parallel execution of
     // collect_coverage(), golden_model(), do_checkers()
+
+
+    fork
+        
+collect_coverage();
+golden_model();
+do_checkers();
+
+    join
 
 endtask : run_phase
 
