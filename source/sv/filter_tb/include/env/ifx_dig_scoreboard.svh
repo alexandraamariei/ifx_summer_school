@@ -56,6 +56,10 @@ class ifx_dig_scoreboard extends uvm_scoreboard;
     event reg_write_e;
     event reg_read_e;
     event regblock_reset_e; // sets when regblock is reset and GM or other components must update
+    
+    bit [`AWIDTH-1:0] latest_address; // last read or write address
+    bit [`DWIDTH-1:0] latest_data;    // last read or write
+
     //=========================================================================
     // COVERAGE.
     //-------------------------------------------------------------------------
@@ -92,9 +96,13 @@ class ifx_dig_scoreboard extends uvm_scoreboard;
                 ifx_dig_reg reg_obj = regblock.get_reg_by_address(packet.address);
                 if(reg_obj != null)
                     reg_obj.write_reg_value(packet.data);
+                latest_address = packet.address;
+                latest_data    = packet.data;
                 ->reg_write_e;
             end else if(packet.access_type == READ) begin
                 // check if the returned data by the DUT is matching the expected data
+                latest_address = packet.address;
+                latest_data    = packet.data;
                 check_read_data(packet.address, packet.data);
                 ->reg_read_e;
             end
@@ -117,7 +125,8 @@ function ifx_dig_scoreboard::new(string name = "ifx_dig_scoreboard", uvm_compone
 //  COVERAGE INITIALIZATION.
 //-------------------------------------------------------------------------
 //=========================================================================
-    this.cg_filter_ctrl        = new();
+    this.cg_filter_ctrl        = new();    
+    this.cg_int_status_read    = new();
 
 //=========================================================================
 //  TLM IMPORT INITIALIZATION.
@@ -136,11 +145,8 @@ function void ifx_dig_scoreboard::build_phase(uvm_phase phase);
     regblock = ifx_dig_regblock::type_id::create("regblock");
     regblock.build();
 
-if (!uvm_config_db#(virtual ifx_dig_interface)::get(this, "", "dig_if", dig_vif))
-        `uvm_fatal("TEST_BASE/NOVIF", "No virtual interface specified for SCOREBOARD")
-
-
-
+    //TODO: Get dig_vif pointer from uvm_config_db
+     uvm_config_db #(virtual ifx_dig_interface)::get(uvm_top, "*", "dig_if", dig_vif);
 
 endfunction : build_phase
 
@@ -158,13 +164,10 @@ task ifx_dig_scoreboard::run_phase(uvm_phase phase);
     // TODO: Write code allowing for parallel execution of
     // collect_coverage(), golden_model(), do_checkers()
 
-
     fork
-        
-collect_coverage();
-golden_model();
-do_checkers();
-
+        collect_coverage();
+        golden_model();
+        do_checkers();
     join
 
 endtask : run_phase

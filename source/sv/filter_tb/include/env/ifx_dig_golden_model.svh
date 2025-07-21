@@ -35,8 +35,6 @@ task golden_model();
 
         monitor_reset();
 
-        collect_coverage();
-
         update_uvc_config();
 
         model_interrupt();

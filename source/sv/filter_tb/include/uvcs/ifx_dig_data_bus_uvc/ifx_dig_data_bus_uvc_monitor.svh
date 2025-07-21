@@ -42,7 +42,7 @@ class ifx_dig_data_bus_uvc_monitor extends uvm_monitor;
       @(posedge vif.clk_i) begin
         `WAIT_NS(1)
         if (vif.acc_en_o && vif.rstn_i) begin
-          `uvm_info(get_type_name(), "Data access detected", UVM_MEDIUM)
+          `uvm_info(get_type_name(), "Data access detected", UVM_NONE)
           mon_item.access_type = vif.wr_en_o ? WRITE : READ; // identify the access type
           mon_item.data = vif.wr_en_o ? vif.wdata_o : vif.rdata_i; // get the data depending on the access type
           mon_item.address = vif.addr_o;

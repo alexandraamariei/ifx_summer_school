@@ -284,11 +284,11 @@ end
 else begin 
      dig_cfg.dig_vif.rstn_i=0;
      #(reset_duration_ns*1ns);
-      @(posedge dig_cfg.dig_vif.clk_i);
-
-     dig_cfg.dig_vif.rstn_i=1;
+      @(posedge dig_cfg.dig_vif.clk_i); 
 
 end
+
+dig_cfg.dig_vif.rstn_i=1;
 endtask : drive_reset
 
 /*
