@@ -34,6 +34,9 @@ package ifx_dig_test_pkg;
   `include "ifx_dig_test_filter_rising.svh"
   `include "ifx_dig_test_filter_toggle.svh"
   //`include "ifx_dig_test_regmodel_showcase.svh"
-
+  `include "ifx_dig_test_int_stat.svh"
+  `include "ifx_dig_test_falling.svh"
+   `include "ifx_dig_test_filter_both.svh"
+  
 
 endpackage

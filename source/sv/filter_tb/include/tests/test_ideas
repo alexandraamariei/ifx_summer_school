@@ -1,0 +1,9 @@
+1. verificare param filtre(N)
+2. set INT_STATUS=1 apoi write all 0, reset
+3. test filter-falling, both, none
+4. test filter-reset(filtrul nu cumuleaza in cazul unui tren de pulsuri)
+5. sincronizare
+-2 pusuri<feresatra de cumulatr>fereastra despartita de un puls de nivel opus intre 2 rising edge-uri de ceas
+6. val dif pt INT_EN si pu,suri valide pt toate filtrele
+7. INTERRUPT -2 sau mai multe filtre si termina de filtrat in acelasi timp
+8. INTERRUPT -filtre care se termina la dist de 1 ceas
