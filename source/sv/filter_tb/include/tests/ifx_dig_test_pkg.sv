@@ -37,6 +37,6 @@ package ifx_dig_test_pkg;
   `include "ifx_dig_test_int_stat.svh"
   `include "ifx_dig_test_falling.svh"
    `include "ifx_dig_test_filter_both.svh"
-  
+     `include "ifx_dig_test_counter.svh"
 
 endpackage

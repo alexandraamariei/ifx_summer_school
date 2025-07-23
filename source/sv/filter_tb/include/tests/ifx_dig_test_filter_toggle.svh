@@ -72,7 +72,8 @@ read_filter_status(filter_list[idx]);
 `WAIT_NS(100)
 
         end
-
+        `TEST_INFO("\n\n\nPrinting Coverage results\n\n\n")
+        `TEST_INFO($sformatf("\ncg_filter_ctrl coverage is = %f\n", dig_env.scoreboard.cg_filtering_type.get_coverage()))
 
 
         phase.drop_objection(this);

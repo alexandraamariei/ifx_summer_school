@@ -145,3 +145,21 @@ covergroup cg_int_status_read with function sample(int id, bit int_stat_bit);
     }
 
 endgroup
+
+covergroup cg_filtering_type with function sample(int id, int tip);
+    option.per_instance = 1;
+    option.name = "cg_int_status_read";
+
+    ID_filter: coverpoint id {
+        bins ID[] = {[0:`FILT_NB-1]};
+    }
+
+    filter_type: coverpoint tip {
+        bins fall_filter = {2};
+        bins rise_filter = {1};
+        bins both_reset = {3};
+    }
+
+    cross_tip_id: cross ID_filter, filter_type;
+
+endgroup
